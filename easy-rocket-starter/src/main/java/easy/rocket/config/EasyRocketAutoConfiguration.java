@@ -39,17 +39,17 @@ public class EasyRocketAutoConfiguration {
   @Bean
   @ConditionalOnProperty(value = "rocketmq.producer.normal")
   @ConditionalOnBean(RocketMqProperties.class)
-  public NormalRocketProducer orderMqProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
-    @Qualifier("normalMqProducer") DefaultMQProducer orderMqProducers) {
-    return new NormalRocketProducer(properties, fallBackServices.getIfUnique(), orderMqProducers);
+  public NormalRocketProducer normalProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
+    @Qualifier("normalMqProducer") DefaultMQProducer normalMqProducer) {
+    return new NormalRocketProducer(properties, fallBackServices.getIfUnique(), normalMqProducer);
   }
 
   @Bean
   @ConditionalOnProperty(value = "rocketmq.producer.order")
   @ConditionalOnBean(RocketMqProperties.class)
-  public OrderRocketProducer normalMqProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
-    @Qualifier("orderMqProducer") DefaultMQProducer normalMqProducer) {
-    return new OrderRocketProducer(properties, fallBackServices.getIfUnique(), normalMqProducer);
+  public OrderRocketProducer orderProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
+    @Qualifier("orderMqProducer") DefaultMQProducer orderMqProducer) {
+    return new OrderRocketProducer(properties, fallBackServices.getIfUnique(), orderMqProducer);
   }
 
   @Bean
@@ -63,16 +63,16 @@ public class EasyRocketAutoConfiguration {
   @Bean
   @ConditionalOnProperty("rocketmq.transactional.listener")
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
-  public SendRocketListener missTransactionalListener(ObjectProvider<NormalRocketProducer> normalMqProducer,
-    ObjectProvider<OrderRocketProducer> orderMqProducer) {
-    return new SendRocketListener(normalMqProducer.getIfUnique(), orderMqProducer.getIfUnique());
+  public SendRocketListener missTransactionalListener(ObjectProvider<NormalRocketProducer> normalProducer,
+    ObjectProvider<OrderRocketProducer> orderProducer) {
+    return new SendRocketListener(normalProducer.getIfUnique(), orderProducer.getIfUnique());
   }
 
   @Bean
   @ConditionalOnProperty("rocketmq.listener")
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
-  public SendRocketListener listener(ObjectProvider<NormalRocketProducer> normalMqProducer, ObjectProvider<OrderRocketProducer> orderMqProducer) {
-    return new SendRocketListener(normalMqProducer.getIfUnique(), orderMqProducer.getIfUnique());
+  public SendRocketListener listener(ObjectProvider<NormalRocketProducer> normalProducer, ObjectProvider<OrderRocketProducer> orderProducer) {
+    return new SendRocketListener(normalProducer.getIfUnique(), orderProducer.getIfUnique());
   }
 
   @Bean
