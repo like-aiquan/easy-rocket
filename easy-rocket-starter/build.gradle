@@ -1,0 +1,31 @@
+plugins {
+  id 'org.springframework.boot' version '2.7.0'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+}
+
+group 'easy.rocket'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compileOnly 'org.springframework.boot:spring-boot-starter'
+  compileOnly 'org.springframework.boot:spring-boot-starter-json'
+  compileOnly 'org.springframework:spring-tx'
+  compileOnly 'org.apache.rocketmq:rocketmq-client:4.9.4'
+
+  implementation 'com.google.guava:guava:31.1-jre'
+
+  // for test
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-json'
+  testImplementation 'org.apache.rocketmq:rocketmq-client:4.9.4'
+  testImplementation 'com.google.guava:guava:31.1-jre'
+}
+
+test {
+  useJUnitPlatform()
+}

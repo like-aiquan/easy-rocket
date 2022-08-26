@@ -1,0 +1,4 @@
+rootProject.name = 'easy-rocket'
+
+include 'demo'
+include 'easy-rocket-starter'
