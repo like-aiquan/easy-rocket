@@ -52,7 +52,7 @@ public class OrderRocketProducer extends AbstractRocketProducer {
       return null;
     }
     if (topic.key() == null || "".equals(topic.key())) {
-      logger.error("order topic please set shadingKey [{}] shading key [{}] body [{}]", topic.topicName(), topic.key(), topic);
+      logger.error("order topic please set shadingKey [{}] body [{}]", topic.topicName(), topic);
       return null;
     }
     try {
