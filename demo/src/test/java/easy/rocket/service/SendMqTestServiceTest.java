@@ -15,7 +15,7 @@ class SendMqTestServiceTest {
 
   @BeforeAll
   static void env() {
-    System.setProperty("user.ip", "192.168.10.150");
+    System.setProperty("user.name_srv", "192.168.10.150");
   }
 
   @Test
