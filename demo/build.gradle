@@ -19,10 +19,13 @@ dependencies {
   implementation 'org.springframework:spring-tx'
   implementation 'org.apache.rocketmq:rocketmq-client:4.9.4'
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+  // for test
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-json'
+  testImplementation 'org.apache.rocketmq:rocketmq-client:4.9.4'
+  testImplementation 'com.google.guava:guava:31.1-jre'
 }
 
-test {
+tasks.named('test') {
   useJUnitPlatform()
 }
