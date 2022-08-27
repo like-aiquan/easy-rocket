@@ -1,0 +1,11 @@
+dependencies {
+    implementation project(':easy-rocket-starter')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    implementation 'org.apache.rocketmq:rocketmq-client'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
