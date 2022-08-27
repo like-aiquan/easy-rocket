@@ -15,6 +15,8 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
  * @date 2022/6/14 14:08
  */
 public class NormalRocketProducer extends AbstractRocketProducer {
+  public static final String NORMAL = "NORMAL";
+
   private final DefaultMQProducer producer;
 
   public NormalRocketProducer(RocketMqProperties producerProperties, FallBackService fallBackService, DefaultMQProducer producer) {

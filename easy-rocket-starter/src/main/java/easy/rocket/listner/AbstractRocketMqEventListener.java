@@ -20,11 +20,27 @@ public abstract class AbstractRocketMqEventListener {
     this.normalRocketProducer = normal;
     this.orderRocketProducer = order;
 
-    log();
+    logStart();
   }
 
-  private void log() {
+  private void logStart() {
     logger.info("start rocket mq listener success, [{}]", this.getClass().getSimpleName());
+  }
+
+  public void destroy() {
+    if (normalRocketProducer != null) {
+      this.normalRocketProducer.destroy();
+      logDestroy(NormalRocketProducer.NORMAL);
+    }
+
+    if (orderRocketProducer != null) {
+      this.orderRocketProducer.destroy();
+      logDestroy(OrderRocketProducer.ORDER);
+    }
+  }
+
+  private void logDestroy(String name) {
+    logger.info("shut down {} producer success.", name);
   }
 
   protected final void sendNormal(AbstractNormalRocketTopic topic) {

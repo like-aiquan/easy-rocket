@@ -16,6 +16,7 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
  * @date 2022/6/14 13:53
  */
 public class OrderRocketProducer extends AbstractRocketProducer {
+  public static final String ORDER = "ORDER";
 
   private final DefaultMQProducer producer;
 
