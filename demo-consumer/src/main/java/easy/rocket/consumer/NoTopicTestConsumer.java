@@ -9,14 +9,13 @@ import easy.rocket.model.SubscribeRelation.Builder;
 import easy.rocket.topic.NoTopicTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * @author chenaiquan
  * @date 2022/6/13 22:59
  */
-//@Component
+@Component
 public class NoTopicTestConsumer extends AbstractNormalRocketConsumer<NoTopicTest> {
   private static final Logger logger = LoggerFactory.getLogger(NoTopicTestConsumer.class);
 

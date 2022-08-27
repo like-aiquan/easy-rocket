@@ -8,14 +8,13 @@ import easy.rocket.model.SubscribeRelation;
 import easy.rocket.topic.PoTopicTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * @author chenaiquan
  * @date 2022/6/14 16:17
  */
-//@Component
+@Component
 public class PoTopicTestConsumer extends AbstractOrderRocketConsumer<PoTopicTest> {
   private static final Logger logger = LoggerFactory.getLogger(PoTopicTestConsumer.class);
 

@@ -1,28 +1,15 @@
-plugins {
-  id 'java'
-  id 'org.springframework.boot' version '2.7.0'
-  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-}
-
-group 'easy.rocket'
-version '0.0.1-SNAPSHOT'
-
-repositories {
-  mavenCentral()
-}
-
 dependencies {
   implementation project(':easy-rocket-starter')
 
   implementation 'org.springframework.boot:spring-boot-starter'
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework:spring-tx'
-  implementation 'org.apache.rocketmq:rocketmq-client:4.9.4'
+  implementation 'org.apache.rocketmq:rocketmq-client'
 
   // for test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.boot:spring-boot-starter-json'
-  testImplementation 'org.apache.rocketmq:rocketmq-client:4.9.4'
+  testImplementation 'org.apache.rocketmq:rocketmq-client'
   testImplementation 'com.google.guava:guava:31.1-jre'
 }
 
