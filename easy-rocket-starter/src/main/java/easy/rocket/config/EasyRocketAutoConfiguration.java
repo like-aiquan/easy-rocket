@@ -36,7 +36,7 @@ public class EasyRocketAutoConfiguration {
     return new DefaultMQProducer();
   }
 
-  @Bean
+  @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty(value = "rocketmq.producer.normal")
   @ConditionalOnBean(RocketMqProperties.class)
   public NormalRocketProducer normalProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
@@ -44,7 +44,7 @@ public class EasyRocketAutoConfiguration {
     return new NormalRocketProducer(properties, fallBackServices.getIfUnique(), normalMqProducer);
   }
 
-  @Bean
+  @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty(value = "rocketmq.producer.order")
   @ConditionalOnBean(RocketMqProperties.class)
   public OrderRocketProducer orderProducer(RocketMqProperties properties, ObjectProvider<FallBackService> fallBackServices,
@@ -52,7 +52,7 @@ public class EasyRocketAutoConfiguration {
     return new OrderRocketProducer(properties, fallBackServices.getIfUnique(), orderMqProducer);
   }
 
-  @Bean
+  @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty({"rocketmq.transactional.listener"})
   @ConditionalOnClass(TransactionalEventListener.class)
   public SendRockTransactionListener transactionalListener(ObjectProvider<NormalRocketProducer> normalMqProducer,
@@ -60,7 +60,7 @@ public class EasyRocketAutoConfiguration {
     return new SendRockTransactionListener(normalMqProducer.getIfUnique(), orderMqProducer.getIfUnique());
   }
 
-  @Bean
+  @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty("rocketmq.transactional.listener")
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
   public SendRocketListener missTransactionalListener(ObjectProvider<NormalRocketProducer> normalProducer,
@@ -68,7 +68,7 @@ public class EasyRocketAutoConfiguration {
     return new SendRocketListener(normalProducer.getIfUnique(), orderProducer.getIfUnique());
   }
 
-  @Bean
+  @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty("rocketmq.listener")
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
   public SendRocketListener listener(ObjectProvider<NormalRocketProducer> normalProducer, ObjectProvider<OrderRocketProducer> orderProducer) {
