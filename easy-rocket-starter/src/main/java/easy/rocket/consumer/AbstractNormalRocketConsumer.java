@@ -13,20 +13,23 @@ import easy.rocket.util.ContinuousStopwatch;
 import easy.rocket.util.JsonUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Supplier;
+import javax.annotation.PreDestroy;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.slf4j.MDC;
 
 /**
  * @author chenaiquan
  * @date 2022/6/13 21:12
  */
 public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocketTopic>
-    extends AbstractRocketConsumer<T>
-    implements MessageListenerConcurrently {
+  extends AbstractRocketConsumer<T>
+  implements MessageListenerConcurrently {
 
   private final DefaultMQPushConsumer consumer;
   private final SubscribeRelation subscribeRelation;
@@ -38,7 +41,7 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
   }
 
   public AbstractNormalRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation,
-      Class<T> bindClazz, DefaultMQPushConsumer consumer) {
+    Class<T> bindClazz, DefaultMQPushConsumer consumer) {
     super(rocketMqProperties);
     this.bindClazz = bindClazz;
     this.subscribeRelation = subscribeRelation;
@@ -67,17 +70,37 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     this.consumer.start();
   }
 
+  @PreDestroy
   public void shutdown() {
     this.consumer.shutdown();
+    logger.info("consumer shut down hook [{}]", this.getClass().getSimpleName());
   }
 
   @Override
   public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messages, ConsumeConcurrentlyContext concurrentlyContext) {
+    return this.consumeMessage(messages);
+  }
+
+  private ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messages) {
     ContinuousStopwatch continuousStopwatch = new ContinuousStopwatch(Stopwatch.createUnstarted());
     MessageExt messageExt = messages.stream().findFirst().orElse(null);
     if (messageExt == null) {
       return Action.Commit.action();
     }
+
+    return this.trance(() -> this.consumeMessage(continuousStopwatch, messageExt), messageExt.getMsgId());
+  }
+
+  private ConsumeConcurrentlyStatus trance(Supplier<ConsumeConcurrentlyStatus> supplier, String tranceId) {
+    MDC.put("tid", tranceId);
+    try {
+      return supplier.get();
+    } finally {
+      MDC.remove("tid");
+    }
+  }
+
+  private ConsumeConcurrentlyStatus consumeMessage(ContinuousStopwatch continuousStopwatch, MessageExt messageExt) {
     Message message = this.convertMessage(messageExt);
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
