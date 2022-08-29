@@ -91,15 +91,6 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     return this.trance(() -> this.consumeMessage(continuousStopwatch, messageExt), messageExt.getMsgId());
   }
 
-  private ConsumeConcurrentlyStatus trance(Supplier<ConsumeConcurrentlyStatus> supplier, String tranceId) {
-    MDC.put("tid", tranceId);
-    try {
-      return supplier.get();
-    } finally {
-      MDC.remove("tid");
-    }
-  }
-
   private ConsumeConcurrentlyStatus consumeMessage(ContinuousStopwatch continuousStopwatch, MessageExt messageExt) {
     Message message = this.convertMessage(messageExt);
     String body = new String(message.getBody(), StandardCharsets.UTF_8);

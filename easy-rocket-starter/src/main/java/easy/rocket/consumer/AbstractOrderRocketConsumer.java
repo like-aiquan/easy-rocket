@@ -25,8 +25,8 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @date 2022/6/14 00:46
  */
 public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
-    extends AbstractRocketConsumer<T>
-    implements MessageListenerOrderly {
+  extends AbstractRocketConsumer<T>
+  implements MessageListenerOrderly {
 
   private final ObjectReader reader;
   private final Class<T> bindClazz;
@@ -38,7 +38,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
   }
 
   public AbstractOrderRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation, Class<T> bindClazz,
-      DefaultMQPushConsumer consumer) {
+    DefaultMQPushConsumer consumer) {
     super(rocketMqProperties);
     this.bindClazz = bindClazz;
     this.subscribeRelation = subscribeRelation;
@@ -76,6 +76,10 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     if (messageExt == null) {
       return Action.Commit.orderlyStatus();
     }
+    return this.trance(() -> this.consumeMessage(continuousStopwatch, messageExt), messageExt.getMsgId());
+  }
+
+  private ConsumeOrderlyStatus consumeMessage(ContinuousStopwatch continuousStopwatch, MessageExt messageExt) {
     Message message = this.convertMessage(messageExt);
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
