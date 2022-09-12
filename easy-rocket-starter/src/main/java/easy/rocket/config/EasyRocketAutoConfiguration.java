@@ -25,7 +25,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
  */
 public class EasyRocketAutoConfiguration {
 
-  public EasyRocketAutoConfiguration(@Autowired ObjectMapper mapper) {
+  public EasyRocketAutoConfiguration(ObjectMapper mapper) {
     JsonUtil.init(mapper);
   }
 
