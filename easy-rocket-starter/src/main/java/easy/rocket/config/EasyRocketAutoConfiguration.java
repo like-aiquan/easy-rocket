@@ -1,13 +1,16 @@
 package easy.rocket.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import easy.rocket.fallback.FallBackService;
 import easy.rocket.fallback.impl.DefaultFallBackServiceImpl;
 import easy.rocket.listner.SendRockTransactionListener;
 import easy.rocket.listner.SendRocketListener;
 import easy.rocket.producer.NormalRocketProducer;
 import easy.rocket.producer.OrderRocketProducer;
+import easy.rocket.util.JsonUtil;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -21,6 +24,10 @@ import org.springframework.transaction.event.TransactionalEventListener;
  * @date 2022/6/14 16:44
  */
 public class EasyRocketAutoConfiguration {
+
+  public EasyRocketAutoConfiguration(@Autowired ObjectMapper mapper) {
+    JsonUtil.init(mapper);
+  }
 
   @Bean
   @ConditionalOnClass(DefaultMQProducer.class)

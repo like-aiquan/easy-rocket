@@ -1,7 +1,5 @@
 package easy.rocket.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.base.Stopwatch;
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
@@ -13,7 +11,6 @@ import easy.rocket.util.ContinuousStopwatch;
 import easy.rocket.util.JsonUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.annotation.PreDestroy;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -21,7 +18,6 @@ import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
-import org.slf4j.MDC;
 
 /**
  * @author chenaiquan
@@ -34,7 +30,6 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
   private final DefaultMQPushConsumer consumer;
   private final SubscribeRelation subscribeRelation;
   private final Class<T> bindClazz;
-  private final ObjectReader DEFAULT_READER;
 
   public AbstractNormalRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation, Class<T> bindClazz) {
     this(rocketMqProperties, subscribeRelation, bindClazz, new DefaultMQPushConsumer());
@@ -46,7 +41,6 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     this.bindClazz = bindClazz;
     this.subscribeRelation = subscribeRelation;
     this.consumer = consumer;
-    this.DEFAULT_READER = JsonUtil.DEFAULT_READER;
 
     try {
       this.start();
@@ -98,9 +92,9 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
 
     T topic;
     try {
-      topic = DEFAULT_READER.forType(this.bindClazz).readValue(body);
-    } catch (JsonProcessingException e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString());
+      topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
+    } catch (Exception e) {
+      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString(), e);
       return Action.Reconsume.action();
     }
     ConsumeContext context = new ConsumeContext();
