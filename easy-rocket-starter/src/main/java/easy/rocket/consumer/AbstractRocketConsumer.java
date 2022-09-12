@@ -4,9 +4,11 @@ import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Message;
 import easy.rocket.topic.RocketTopic;
 import java.util.Properties;
+import java.util.function.Supplier;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * @author chenaiquan
@@ -31,6 +33,15 @@ public abstract class AbstractRocketConsumer<T extends RocketTopic> implements R
     message.setReconsumeTimes(messageExt.getReconsumeTimes());
     message.setTags(messageExt.getTags());
     return message;
+  }
+
+  protected <R> R trance(Supplier<R> call, String tranceId) {
+    MDC.put("tid", tranceId);
+    try {
+      return call.get();
+    } finally {
+      MDC.remove("tid");
+    }
   }
 
   protected String resolveTopicGroupName(String topicName) {

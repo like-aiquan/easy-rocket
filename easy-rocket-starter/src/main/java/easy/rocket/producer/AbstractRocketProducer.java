@@ -23,13 +23,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRocketProducer {
   protected static final Logger logger = LoggerFactory.getLogger(AbstractRocketProducer.class);
-
-  private final ObjectWriter writer;
   protected RocketMqProperties producerProperties;
   protected FallBackService fallBackService;
 
   public AbstractRocketProducer(RocketMqProperties producerProperties, FallBackService fallBackService) {
-    this.writer = JsonUtil.DEFAULT_WRITER;
     this.producerProperties = producerProperties;
     this.fallBackService = fallBackService;
   }
@@ -39,7 +36,7 @@ public abstract class AbstractRocketProducer {
     try {
       SendResult send = this.send(topic, this::send);
       logger.info("send success msg[{}] topic[{}] key[{}] tag[{}] {}", send.getMsgId(), topic.topicName(), topic.key(), topic.tags(),
-          logBody(topic.logBody(), topic.toString()));
+        logBody(topic.logBody(), topic.toString()));
       continuousStopwatch.resetAndLog("mq send");
       return send;
     } catch (Throwable e) {
@@ -47,7 +44,7 @@ public abstract class AbstractRocketProducer {
         this.fallBackService.fallBack(topic, e);
       }
       logger.error("send failed topic[{}] key[{}] tag[{}] body[{}] {}", topic.topicName(), topic.key(), topic.tags(),
-          logBody(topic.logBody(), topic.toString()), e.getMessage(), e);
+        logBody(topic.logBody(), topic.toString()), e.getMessage(), e);
       throw e;
     }
   }
@@ -57,7 +54,7 @@ public abstract class AbstractRocketProducer {
   protected SendResult send(RocketTopic topic, BiFunction<Message, RocketTopic, SendResult> sender) {
     String body;
     try {
-      body = this.writer.writeValueAsString(topic);
+      body = JsonUtil.writer().writeValueAsString(topic);
     } catch (JsonProcessingException e) {
       throw new UncheckedIOException(e);
     }

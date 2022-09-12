@@ -1,7 +1,6 @@
 package easy.rocket.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.base.Stopwatch;
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
@@ -25,10 +24,8 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @date 2022/6/14 00:46
  */
 public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
-    extends AbstractRocketConsumer<T>
-    implements MessageListenerOrderly {
-
-  private final ObjectReader reader;
+  extends AbstractRocketConsumer<T>
+  implements MessageListenerOrderly {
   private final Class<T> bindClazz;
   private final SubscribeRelation subscribeRelation;
   private final DefaultMQPushConsumer consumer;
@@ -38,12 +35,11 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
   }
 
   public AbstractOrderRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation, Class<T> bindClazz,
-      DefaultMQPushConsumer consumer) {
+    DefaultMQPushConsumer consumer) {
     super(rocketMqProperties);
     this.bindClazz = bindClazz;
     this.subscribeRelation = subscribeRelation;
     this.consumer = consumer;
-    this.reader = JsonUtil.DEFAULT_READER;
 
     try {
       this.start();
@@ -76,13 +72,17 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     if (messageExt == null) {
       return Action.Commit.orderlyStatus();
     }
+    return this.trance(() -> this.consumeMessage(continuousStopwatch, messageExt), messageExt.getMsgId());
+  }
+
+  private ConsumeOrderlyStatus consumeMessage(ContinuousStopwatch continuousStopwatch, MessageExt messageExt) {
     Message message = this.convertMessage(messageExt);
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
 
     T topic;
     try {
-      topic = reader.forType(this.bindClazz).readValue(body);
+      topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
     } catch (JsonProcessingException e) {
       logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString());
       return Action.Reconsume.orderlyStatus();

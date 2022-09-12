@@ -1,7 +1,5 @@
 package easy.rocket.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.base.Stopwatch;
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
@@ -13,6 +11,7 @@ import easy.rocket.util.ContinuousStopwatch;
 import easy.rocket.util.JsonUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import javax.annotation.PreDestroy;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -25,25 +24,23 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @date 2022/6/13 21:12
  */
 public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocketTopic>
-    extends AbstractRocketConsumer<T>
-    implements MessageListenerConcurrently {
+  extends AbstractRocketConsumer<T>
+  implements MessageListenerConcurrently {
 
   private final DefaultMQPushConsumer consumer;
   private final SubscribeRelation subscribeRelation;
   private final Class<T> bindClazz;
-  private final ObjectReader DEFAULT_READER;
 
   public AbstractNormalRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation, Class<T> bindClazz) {
     this(rocketMqProperties, subscribeRelation, bindClazz, new DefaultMQPushConsumer());
   }
 
   public AbstractNormalRocketConsumer(RocketMqProperties rocketMqProperties, SubscribeRelation subscribeRelation,
-      Class<T> bindClazz, DefaultMQPushConsumer consumer) {
+    Class<T> bindClazz, DefaultMQPushConsumer consumer) {
     super(rocketMqProperties);
     this.bindClazz = bindClazz;
     this.subscribeRelation = subscribeRelation;
     this.consumer = consumer;
-    this.DEFAULT_READER = JsonUtil.DEFAULT_READER;
 
     try {
       this.start();
@@ -67,26 +64,37 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     this.consumer.start();
   }
 
+  @PreDestroy
   public void shutdown() {
     this.consumer.shutdown();
+    logger.info("consumer shut down hook [{}]", this.getClass().getSimpleName());
   }
 
   @Override
   public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messages, ConsumeConcurrentlyContext concurrentlyContext) {
+    return this.consumeMessage(messages);
+  }
+
+  private ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messages) {
     ContinuousStopwatch continuousStopwatch = new ContinuousStopwatch(Stopwatch.createUnstarted());
     MessageExt messageExt = messages.stream().findFirst().orElse(null);
     if (messageExt == null) {
       return Action.Commit.action();
     }
+
+    return this.trance(() -> this.consumeMessage(continuousStopwatch, messageExt), messageExt.getMsgId());
+  }
+
+  private ConsumeConcurrentlyStatus consumeMessage(ContinuousStopwatch continuousStopwatch, MessageExt messageExt) {
     Message message = this.convertMessage(messageExt);
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
 
     T topic;
     try {
-      topic = DEFAULT_READER.forType(this.bindClazz).readValue(body);
-    } catch (JsonProcessingException e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString());
+      topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
+    } catch (Exception e) {
+      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString(), e);
       return Action.Reconsume.action();
     }
     ConsumeContext context = new ConsumeContext();
