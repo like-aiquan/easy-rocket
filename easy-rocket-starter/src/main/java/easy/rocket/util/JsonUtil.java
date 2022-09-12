@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 /**
  * @author chenaiquan
@@ -26,7 +25,8 @@ public final class JsonUtil {
     ObjectMapper mapper = new ObjectMapper();
     mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    // 推荐使用下划线命名的方式序列化以及反序列化 Json 字符
+    // mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     init(mapper);
   }
 
