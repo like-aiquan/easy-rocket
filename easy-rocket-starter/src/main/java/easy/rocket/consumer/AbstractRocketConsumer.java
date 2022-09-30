@@ -20,7 +20,7 @@ public abstract class AbstractRocketConsumer<T extends RocketTopic> implements R
   protected final RocketMqProperties rocketMqProperties;
 
   public AbstractRocketConsumer(RocketMqProperties rocketMqProperties) {
-    this.rocketMqProperties = rocketMqProperties;
+    this.rocketMqProperties = rocketMqProperties.checkProperties();
   }
 
   protected Message convertMessage(MessageExt messageExt) {

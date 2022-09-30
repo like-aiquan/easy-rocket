@@ -32,9 +32,7 @@ public class OrderRocketProducer extends AbstractRocketProducer {
       this.producer.setProducerGroup(this.producerProperties.getProducerGroup());
       this.producer.setNamespace(this.producerProperties.getNameSpace());
       String nameSrvAddr = this.producerProperties.getNameSrvAddr();
-      if (nameSrvAddr != null && !"".equals(nameSrvAddr)) {
-        this.producer.setNamesrvAddr(nameSrvAddr);
-      }
+      this.producer.setNamesrvAddr(nameSrvAddr);
       this.producer.start();
       logger.info("start producer success {}", this.getClass().getSimpleName());
     } catch (MQClientException e) {
