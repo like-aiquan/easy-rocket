@@ -42,6 +42,13 @@ public class EasyRocketAutoConfiguration {
     return new DefaultMQProducer();
   }
 
+  @Bean
+  @ConditionalOnProperty("rocketmq.log.fall.back")
+  @ConditionalOnMissingBean(FallBackService.class)
+  public FallBackService fallBackService() {
+    return new DefaultFallBackServiceImpl();
+  }
+
   @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty(value = "rocketmq.producer.normal")
   @ConditionalOnBean(RocketMqProperties.class)
@@ -79,12 +86,5 @@ public class EasyRocketAutoConfiguration {
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
   public SendRocketListener listener(ObjectProvider<NormalRocketProducer> normalProducer, ObjectProvider<OrderRocketProducer> orderProducer) {
     return new SendRocketListener(normalProducer.getIfUnique(), orderProducer.getIfUnique());
-  }
-
-  @Bean
-  @ConditionalOnProperty("rocketmq.log.fall.back")
-  @ConditionalOnMissingBean(FallBackService.class)
-  public FallBackService fallBackService() {
-    return new DefaultFallBackServiceImpl();
   }
 }
