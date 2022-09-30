@@ -33,7 +33,7 @@ rocketmq.producer.order=true
 
 # 监听器 用于真正的推送
 #rocketmq.listener=true
-# 是否在 spring tx 事务执行完毕后推送
+# 是否支持在 spring tx 事务执行完毕后推送
 rocketmq.transactional.listener=true
 
 # fallback 记录（甚至可以不做开关 直接记录？？）
