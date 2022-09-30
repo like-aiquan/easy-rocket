@@ -1,6 +1,7 @@
 package easy.rocket.config;
 
 import java.util.Properties;
+import org.apache.rocketmq.common.utils.NameServerAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -90,16 +91,17 @@ public class RocketMqProperties {
       logger.warn("empty producer group, will use like env");
     }
 
-    // 不用校验 name srv  如果是 consumer 模块启动时会用 dump 的动作 会直接报错
-    // producer 模块会推送失败 可以使用或实现 fallbackService 记录错误
-    //    String nameSrvAddr = this.getNameSrvAddr();
-    //   if (!StringUtils.hasText(nameSrvAddr)) {
-    //      nameSrvAddr = NameServerAddressUtils.getNameServerAddresses();
-    //      if (!StringUtils.hasText(nameSrvAddr)) {
-    //        throw new NullPointerException("check set name srv addr");
-    //      }
-    //      this.setNameSrvAddr(nameSrvAddr);
-    //    }
+    // fixme 是否可以？
+    // fixme 不用校验 name srv  如果是 consumer 模块启动时会用 dump 的动作，会直接报错
+    // fixme producer 模块会推送失败 可以使用或实现 fallbackService 记录错误
+    String nameSrvAddr = this.getNameSrvAddr();
+    if (!StringUtils.hasText(nameSrvAddr)) {
+      nameSrvAddr = NameServerAddressUtils.getNameServerAddresses();
+      if (!StringUtils.hasText(nameSrvAddr)) {
+        throw new NullPointerException("check set name srv addr");
+      }
+      this.setNameSrvAddr(nameSrvAddr);
+    }
     return this;
   }
 }
