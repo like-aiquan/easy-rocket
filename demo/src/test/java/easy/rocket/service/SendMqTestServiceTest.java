@@ -20,7 +20,7 @@ class SendMqTestServiceTest {
 
   @Test
   void contextLoads() {
-    this.sendMqTestService.send(1, 2);
+    this.sendMqTestService.send(1000, 2);
   }
 
 }
