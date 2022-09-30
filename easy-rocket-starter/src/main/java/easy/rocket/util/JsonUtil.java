@@ -30,6 +30,10 @@ public final class JsonUtil {
     InitMapper(mapper);
   }
 
+  public static void init(ObjectMapper mapper) {
+    InitMapper(mapper);
+  }
+
   private static void InitMapper(ObjectMapper mapper) {
     if (initializeEnable()) {
       return;
