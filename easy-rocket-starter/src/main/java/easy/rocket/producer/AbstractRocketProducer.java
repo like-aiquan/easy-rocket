@@ -27,7 +27,7 @@ public abstract class AbstractRocketProducer {
   protected FallBackService fallBackService;
 
   public AbstractRocketProducer(RocketMqProperties producerProperties, FallBackService fallBackService) {
-    this.producerProperties = producerProperties;
+    this.producerProperties = producerProperties.checkProperties();
     this.fallBackService = fallBackService;
   }
 

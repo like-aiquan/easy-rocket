@@ -27,7 +27,7 @@ public final class JsonUtil {
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     // 推荐使用下划线命名的方式序列化以及反序列化 Json 字符
     // mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-    init(mapper);
+    InitMapper(mapper);
   }
 
   public static void init(ObjectMapper mapper) {

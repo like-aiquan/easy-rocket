@@ -42,6 +42,13 @@ public class EasyRocketAutoConfiguration {
     return new DefaultMQProducer();
   }
 
+  @Bean
+  @ConditionalOnProperty(value = "rocketmq.log.fall.back", matchIfMissing = true)
+  @ConditionalOnMissingBean(FallBackService.class)
+  public FallBackService fallBackService() {
+    return new DefaultFallBackServiceImpl();
+  }
+
   @Bean(destroyMethod = "destroy")
   @ConditionalOnProperty(value = "rocketmq.producer.normal")
   @ConditionalOnBean(RocketMqProperties.class)
@@ -59,7 +66,7 @@ public class EasyRocketAutoConfiguration {
   }
 
   @Bean(destroyMethod = "destroy")
-  @ConditionalOnProperty({"rocketmq.transactional.listener"})
+  @ConditionalOnProperty(value = "rocketmq.transactional.listener", matchIfMissing = true)
   @ConditionalOnClass(TransactionalEventListener.class)
   public SendRockTransactionListener transactionalListener(ObjectProvider<NormalRocketProducer> normalMqProducer,
     ObjectProvider<OrderRocketProducer> orderMqProducer) {
@@ -67,7 +74,7 @@ public class EasyRocketAutoConfiguration {
   }
 
   @Bean(destroyMethod = "destroy")
-  @ConditionalOnProperty("rocketmq.transactional.listener")
+  @ConditionalOnProperty(value = "rocketmq.transactional.listener", matchIfMissing = true)
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
   public SendRocketListener missTransactionalListener(ObjectProvider<NormalRocketProducer> normalProducer,
     ObjectProvider<OrderRocketProducer> orderProducer) {
@@ -75,16 +82,9 @@ public class EasyRocketAutoConfiguration {
   }
 
   @Bean(destroyMethod = "destroy")
-  @ConditionalOnProperty("rocketmq.listener")
+  @ConditionalOnProperty(value = "rocketmq.listener", matchIfMissing = true)
   @ConditionalOnMissingBean(SendRockTransactionListener.class)
   public SendRocketListener listener(ObjectProvider<NormalRocketProducer> normalProducer, ObjectProvider<OrderRocketProducer> orderProducer) {
     return new SendRocketListener(normalProducer.getIfUnique(), orderProducer.getIfUnique());
-  }
-
-  @Bean
-  @ConditionalOnProperty("rocketmq.log.fall.back")
-  @ConditionalOnMissingBean(FallBackService.class)
-  public FallBackService fallBackService() {
-    return new DefaultFallBackServiceImpl();
   }
 }
