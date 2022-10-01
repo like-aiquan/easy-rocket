@@ -2,6 +2,7 @@ plugins {
   id 'java'
   id 'org.springframework.boot' version '2.7.0'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'maven-publish'
 }
 
 group 'easy.rocket'
@@ -28,4 +29,40 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
+}
+
+task sourceJar(type: Jar) {
+  from sourceSets.main.allJava
+  classifier "sources"
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      // jar 包坐标
+      groupId = project.group
+      artifactId = project.name
+      version = project.version
+
+      from components.java
+      artifact sourceJar
+    }
+  }
+
+  //定义目标仓库 (包所存放的地方)
+  repositories {
+    // 本地仓库
+    mavenLocal()
+
+    // 远程仓库
+//    maven {
+//      credentials {
+//        username project.findProperty("mavenUser") ?: ''
+//        password project.findProperty("mavenPass") ?: ''
+//      }
+//      def releasesRepoUrl = ""
+//      def snapshotsRepoUrl = ""
+//      url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//    }
+  }
 }
