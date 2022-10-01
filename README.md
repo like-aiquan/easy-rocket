@@ -12,6 +12,7 @@ pr 流程 基于 develop 拉迭代分支，pr 目标分支也需要是 develop
 
 配置信息解释
 
+```yaml
 # name srv 地址 可以用 rocket mq 的方式指定 
 # see org.apache.rocketmq.common.utils.NameServerAddressUtils#getNameServerAddresses
 user.name_srv=192.168.10.150:9876
@@ -38,3 +39,4 @@ rocketmq.transactional.listener=true
 
 # fallback 记录（甚至可以不做开关 直接记录？？）
 rocketmq.log.fall.back=true
+```
