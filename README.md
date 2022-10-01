@@ -18,7 +18,7 @@ pr 流程 基于 develop 拉迭代分支，pr 目标分支也需要是 develop
 user.name_srv=192.168.10.150:9876
 rocketmq.name-srv-addr=${user.name_srv}
 # 系统运行环境 必须指定 此处就是 topic 的前缀 所有 topic 按照运行环境区分
-# 不指定会尝试获取 spring.active.profile
+# 不指定会尝试获取 spring.profiles.active
 rocketmq.env=dev
 # producer 组
 rocketmq.producer-group=dev
