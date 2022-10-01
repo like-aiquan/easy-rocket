@@ -1,5 +1,6 @@
 package easy.rocket.config;
 
+import easy.rocket.util.SpringEnvironmentContextUtil;
 import java.util.Properties;
 import org.apache.rocketmq.common.utils.NameServerAddressUtils;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public class RocketMqProperties {
     String group = this.getProducerGroup();
 
     if (!StringUtils.hasText(env)) {
-      env = System.getProperty("spring.active.profile");
+      env = SpringEnvironmentContextUtil.firstActiveProfile();
       if (!StringUtils.hasText(env)) {
         throw new NullPointerException("check set env!");
       }
@@ -92,7 +93,7 @@ public class RocketMqProperties {
     }
 
     // fixme 是否可以？
-    // fixme 不用校验 name srv  如果是 consumer 模块启动时会用 dump 的动作，会直接报错
+    // fixme 不用校验 name srv  如果是 consumer 模块启动时会直接开始拉取的动作，会直接报错
     // fixme producer 模块会推送失败 可以使用或实现 fallbackService 记录错误
     String nameSrvAddr = this.getNameSrvAddr();
     if (!StringUtils.hasText(nameSrvAddr)) {
