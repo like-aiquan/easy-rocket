@@ -48,3 +48,7 @@ rocketmq.transactional.listener=true
 # fallback 记录（甚至可以不做开关 直接记录？？）
 rocketmq.log.fall.back=true
 ```
+
+
+
+### 特别感谢 jetbrains 组织 对开源项目支持！
