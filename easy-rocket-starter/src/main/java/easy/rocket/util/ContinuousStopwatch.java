@@ -29,9 +29,9 @@ public class ContinuousStopwatch {
    * Resets and returns elapsed time in milliseconds.
    */
   public long reset() {
-    long elapsedTimeMs = stopwatch.elapsed(MILLISECONDS);
-    stopwatch.reset();
-    stopwatch.start();
+    long elapsedTimeMs = this.stopwatch.elapsed(MILLISECONDS);
+    this.stopwatch.reset();
+    this.stopwatch.start();
     return elapsedTimeMs;
   }
 
@@ -42,7 +42,13 @@ public class ContinuousStopwatch {
     logger.info(label + ": " + reset() + "ms");
   }
 
-  public void stop() {
-    stopwatch.stop();
+  public long stop() {
+    long elapsed = this.stopwatch.elapsed(MILLISECONDS);
+    this.stopwatch.stop();
+    return elapsed;
+  }
+
+  public void stopAndLog(String label) {
+    logger.info(label + ": " + this.stop() + "ms");
   }
 }
