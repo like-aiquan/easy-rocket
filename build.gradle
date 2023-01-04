@@ -15,7 +15,7 @@ subprojects {
   apply plugin: 'org.springframework.boot'
   apply plugin: 'io.spring.dependency-management'
 
-  group = 'easy.rocket'
+  group = 'like.ai'
   version = '0.0.1-SNAPSHOT'
 
   repositories {
@@ -24,11 +24,11 @@ subprojects {
 
   dependencyManagement {
     imports {
-      mavenBom 'org.apache.rocketmq:rocketmq-client:4.9.4'
+      mavenBom 'org.apache.rocketmq:rocketmq-client:5.0.0'
     }
   }
-}
 
-tasks.named('test') {
-  useJUnitPlatform()
+  tasks.named('test') {
+    useJUnitPlatform()
+  }
 }
