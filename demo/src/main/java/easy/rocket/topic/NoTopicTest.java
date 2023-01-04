@@ -17,11 +17,6 @@ public class NoTopicTest extends AbstractNormalRocketTopic {
     return TOPIC_NAME;
   }
 
-  @Override
-  public String key() {
-    return id.toString();
-  }
-
   public Long getId() {
     return id;
   }
