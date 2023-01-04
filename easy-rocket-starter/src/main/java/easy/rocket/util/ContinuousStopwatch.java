@@ -41,4 +41,8 @@ public class ContinuousStopwatch {
   public void resetAndLog(String label) {
     logger.info(label + ": " + reset() + "ms");
   }
+
+  public void stop() {
+    stopwatch.stop();
+  }
 }
