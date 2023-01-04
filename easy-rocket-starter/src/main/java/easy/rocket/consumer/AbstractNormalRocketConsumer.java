@@ -94,7 +94,7 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     try {
       topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
     } catch (Exception e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString(), e);
+      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.getMessage(), e);
       return Action.Reconsume.action();
     }
     ConsumeContext context = new ConsumeContext();
@@ -120,7 +120,7 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
       return result.action();
     } catch (Throwable e) {
       continuousStopwatch.resetAndLog("consume message");
-      logger.error("{} ons message exception: {}", consumerName, e.toString(), e);
+      logger.error("{} ons message exception: {}", consumerName, e.getMessage(), e);
       return Action.Reconsume.action();
     }
   }

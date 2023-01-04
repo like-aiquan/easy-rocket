@@ -84,7 +84,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     try {
       topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
     } catch (JsonProcessingException e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.toString());
+      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.getMessage());
       return Action.Reconsume.orderlyStatus();
     }
     ConsumeContext context = new ConsumeContext();
@@ -110,7 +110,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
       return result.orderlyStatus();
     } catch (Throwable e) {
       continuousStopwatch.resetAndLog("consume message");
-      logger.error("{} ons message exception: {}", consumerName, e.toString(), e);
+      logger.error("{} ons message exception: {}", consumerName, e.getMessage(), e);
       return Action.Reconsume.orderlyStatus();
     }
   }
