@@ -1,5 +1,6 @@
 package easy.rocket.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -69,5 +70,13 @@ public final class JsonUtil {
   public static ObjectWriter writer() {
     InitMapper(null);
     return JsonUtil.DEFAULT_WRITER;
+  }
+
+  public static String writeValueAsString(Object o) {
+    try {
+      return writer().writeValueAsString(o);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
