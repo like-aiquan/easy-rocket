@@ -6,14 +6,12 @@ import org.apache.rocketmq.common.utils.NameServerAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
  * @author chenaiquan
  * @date 2022/6/12 14:18
  */
-@Component
 @ConfigurationProperties(value = "rocketmq")
 public class RocketMqProperties {
   private static final Logger logger = LoggerFactory.getLogger(RocketMqProperties.class);

@@ -29,6 +29,11 @@ public class EasyRocketAutoConfiguration {
   }
 
   @Bean
+  public RocketMqProperties properties() {
+    return new RocketMqProperties();
+  }
+
+  @Bean
   @ConditionalOnClass(DefaultMQProducer.class)
   @ConditionalOnMissingBean(name = "normalMqProducer")
   public DefaultMQProducer normalMqProducer() {
