@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author chenaiquan
- * @date 2022/6/12 14:29
+ * A continuously timing stopwatch that is used for simple performance monitoring. Author: crazybob@google.com (Bob Lee)
  */
 public class ContinuousStopwatch {
   private static final Logger logger = LoggerFactory.getLogger(ContinuousStopwatch.class);
@@ -38,8 +37,12 @@ public class ContinuousStopwatch {
   /**
    * Resets and logs elapsed time in milliseconds.
    */
-  public void resetAndLog(String label) {
+  public void resetAndLog(String label, Logger logger) {
     logger.info(label + ": " + reset() + "ms");
+  }
+
+  public void resetAndLog(String label) {
+    this.resetAndLog(label, logger);
   }
 
   public long stop() {
@@ -49,6 +52,10 @@ public class ContinuousStopwatch {
   }
 
   public void stopAndLog(String label) {
+    this.stopAndLog(label, logger);
+  }
+
+  public void stopAndLog(String label, Logger logger) {
     logger.info(label + ": " + this.stop() + "ms");
   }
 }
