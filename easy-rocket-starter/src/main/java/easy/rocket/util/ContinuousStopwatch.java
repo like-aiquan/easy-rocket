@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A continuously timing stopwatch that is used for simple performance monitoring. Author: crazybob@google.com (Bob Lee)
+ * from com.google.inject.internal.util
+ * </br> A continuously timing stopwatch that is used for simple performance monitoring.
+ * </br> Author: crazybob@google.com (Bob Lee)
  */
 public class ContinuousStopwatch {
   private static final Logger logger = LoggerFactory.getLogger(ContinuousStopwatch.class);
