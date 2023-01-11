@@ -94,7 +94,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
         return Action.Commit.orderlyStatus();
       }
     } catch (Throwable e) {
-      continuousStopwatch.resetAndLog("consume time");
+      continuousStopwatch.resetAndLog("consume time", logger);
       logger.error("{} accept ons message exception: {}", consumerName, e, e);
       return Action.Reconsume.orderlyStatus();
     }
@@ -103,13 +103,13 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     try {
       Action result = this.consume(message, topic, context);
       logger.info("{} {} ons message", consumerName, result);
-      continuousStopwatch.resetAndLog("commit message");
+      continuousStopwatch.resetAndLog("commit message", logger);
       if (Action.Reconsume.equals(result) && message.getReconsumeTimes() >= thresholdOfErrorNotify(topic, message)) {
         logger.error("{} ons message {} {} reconsume times {}", consumerName, message.getTopic(), message.getMsgId(), message.getReconsumeTimes());
       }
       return result.orderlyStatus();
     } catch (Throwable e) {
-      continuousStopwatch.resetAndLog("consume message");
+      continuousStopwatch.resetAndLog("consume message", logger);
       logger.error("{} ons message exception: {}", consumerName, e.getMessage(), e);
       return Action.Reconsume.orderlyStatus();
     }
