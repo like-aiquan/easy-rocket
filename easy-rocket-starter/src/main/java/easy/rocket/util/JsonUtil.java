@@ -72,7 +72,7 @@ public final class JsonUtil {
     return JsonUtil.DEFAULT_WRITER;
   }
 
-  public static String write(Object o) {
+  public static <T> String write(T o) {
     try {
       return writer().writeValueAsString(o);
     } catch (JsonProcessingException e) {
@@ -80,7 +80,7 @@ public final class JsonUtil {
     }
   }
 
-  public static String read(Class<?> clazz, String json) {
+  public static <T> T read(Class<T> clazz, String json) {
     try {
       return reader().forType(clazz).readValue(json);
     } catch (JsonProcessingException e) {

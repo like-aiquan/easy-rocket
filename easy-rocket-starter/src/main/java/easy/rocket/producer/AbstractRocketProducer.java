@@ -52,13 +52,7 @@ public abstract class AbstractRocketProducer {
   protected abstract SendResult send(Message message, RocketTopic topic);
 
   protected SendResult send(RocketTopic topic, BiFunction<Message, RocketTopic, SendResult> sender) {
-    String body;
-    try {
-      body = JsonUtil.writer().writeValueAsString(topic);
-    } catch (JsonProcessingException e) {
-      throw new UncheckedIOException(e);
-    }
-
+    String body = JsonUtil.write(topic);
     String topicName = this.resolveTopicName(topic.topicName());
     String tag = this.resolveTag(topic.tags());
     Message message = new Message(topicName, tag, body.getBytes(StandardCharsets.UTF_8));

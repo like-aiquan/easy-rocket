@@ -80,13 +80,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
 
-    T topic;
-    try {
-      topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
-    } catch (JsonProcessingException e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.getMessage());
-      return Action.Reconsume.orderlyStatus();
-    }
+    T topic = JsonUtil.read(this.bindClazz, body);
     ConsumeContext context = new ConsumeContext();
     try {
       if (!this.accept(message, topic, context)) {

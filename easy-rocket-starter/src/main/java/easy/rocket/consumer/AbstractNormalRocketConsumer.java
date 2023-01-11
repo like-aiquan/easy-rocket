@@ -90,13 +90,7 @@ public abstract class AbstractNormalRocketConsumer<T extends AbstractNormalRocke
     String body = new String(message.getBody(), StandardCharsets.UTF_8);
     String consumerName = this.getClass().getSimpleName();
 
-    T topic;
-    try {
-      topic = JsonUtil.reader().forType(this.bindClazz).readValue(body);
-    } catch (Exception e) {
-      logger.error("{} ons message: {} deserialize error: {}", consumerName, body, e.getMessage(), e);
-      return Action.Reconsume.action();
-    }
+    T topic = JsonUtil.read(this.bindClazz, body);
     ConsumeContext context = new ConsumeContext();
     try {
       if (!this.accept(message, topic, context)) {
