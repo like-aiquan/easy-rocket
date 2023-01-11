@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.util.Objects;
 
 /**
  * @author chenaiquan
@@ -19,9 +20,6 @@ public final class JsonUtil {
     return DEFAULT_MAPPER != null && DEFAULT_WRITER != null && DEFAULT_READER != null;
   }
 
-  /**
-   * TODO 并发修改控制  单例模式 ?
-   */
   public static void init() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
@@ -32,6 +30,8 @@ public final class JsonUtil {
   }
 
   public static void init(ObjectMapper mapper) {
+    Objects.requireNonNull(mapper);
+
     InitMapper(mapper);
   }
 
@@ -72,11 +72,19 @@ public final class JsonUtil {
     return JsonUtil.DEFAULT_WRITER;
   }
 
-  public static String writeValueAsString(Object o) {
+  public static String write(Object o) {
     try {
       return writer().writeValueAsString(o);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new UnsupportedOperationException(e);
+    }
+  }
+
+  public static String read(Class<?> clazz, String json) {
+    try {
+      return reader().forType(clazz).readValue(json);
+    } catch (JsonProcessingException e) {
+      throw new UnsupportedOperationException(e);
     }
   }
 }
