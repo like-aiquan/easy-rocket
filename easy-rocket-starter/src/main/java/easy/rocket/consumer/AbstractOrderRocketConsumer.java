@@ -1,10 +1,8 @@
 package easy.rocket.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Stopwatch;
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
-import easy.rocket.model.ConsumeContext;
 import easy.rocket.model.Message;
 import easy.rocket.model.SubscribeRelation;
 import easy.rocket.topic.RocketTopic;
@@ -81,9 +79,8 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
     String consumerName = this.getClass().getSimpleName();
 
     T topic = JsonUtil.read(this.bindClazz, body);
-    ConsumeContext context = new ConsumeContext();
     try {
-      if (!this.accept(message, topic, context)) {
+      if (!this.accept(message, topic)) {
         logger.info("{} ignore ons message: {}", consumerName, body);
         return Action.Commit.orderlyStatus();
       }
@@ -95,7 +92,7 @@ public abstract class AbstractOrderRocketConsumer<T extends RocketTopic>
 
     logger.info("{} begin ons message: {}", consumerName, body);
     try {
-      Action result = this.consume(message, topic, context);
+      Action result = this.consume(message, topic);
       logger.info("{} {} ons message", consumerName, result);
       continuousStopwatch.resetAndLog("commit message", logger);
       if (Action.Reconsume.equals(result) && message.getReconsumeTimes() >= thresholdOfErrorNotify(topic, message)) {

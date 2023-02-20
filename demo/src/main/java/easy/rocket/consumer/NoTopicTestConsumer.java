@@ -3,14 +3,11 @@ package easy.rocket.consumer;
 
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
-import easy.rocket.model.ConsumeContext;
 import easy.rocket.model.Message;
 import easy.rocket.model.SubscribeRelation.Builder;
 import easy.rocket.topic.NoTopicTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author chenaiquan
@@ -28,12 +25,12 @@ public class NoTopicTestConsumer extends AbstractNormalRocketConsumer<NoTopicTes
   }
 
   @Override
-  public boolean accept(Message message, NoTopicTest topic, ConsumeContext context) {
+  public boolean accept(Message message, NoTopicTest topic) {
     return true;
   }
 
   @Override
-  public Action consume(Message message, NoTopicTest topic, ConsumeContext context) {
+  public Action consume(Message message, NoTopicTest topic) {
     return Action.Commit;
   }
 }

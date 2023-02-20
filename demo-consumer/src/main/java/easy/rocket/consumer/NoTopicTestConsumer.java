@@ -3,7 +3,6 @@ package easy.rocket.consumer;
 
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
-import easy.rocket.model.ConsumeContext;
 import easy.rocket.model.Message;
 import easy.rocket.model.SubscribeRelation.Builder;
 import easy.rocket.topic.NoTopicTest;
@@ -27,12 +26,12 @@ public class NoTopicTestConsumer extends AbstractNormalRocketConsumer<NoTopicTes
   }
 
   @Override
-  public boolean accept(Message message, NoTopicTest topic, ConsumeContext context) {
+  public boolean accept(Message message, NoTopicTest topic) {
     return true;
   }
 
   @Override
-  public Action consume(Message message, NoTopicTest topic, ConsumeContext context) {
+  public Action consume(Message message, NoTopicTest topic) {
     return Action.Commit;
   }
 }

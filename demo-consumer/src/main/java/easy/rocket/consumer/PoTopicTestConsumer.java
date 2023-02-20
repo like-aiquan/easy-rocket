@@ -2,7 +2,6 @@ package easy.rocket.consumer;
 
 import easy.rocket.config.RocketMqProperties;
 import easy.rocket.model.Action;
-import easy.rocket.model.ConsumeContext;
 import easy.rocket.model.Message;
 import easy.rocket.model.SubscribeRelation;
 import easy.rocket.topic.PoTopicTest;
@@ -26,12 +25,12 @@ public class PoTopicTestConsumer extends AbstractOrderRocketConsumer<PoTopicTest
   }
 
   @Override
-  public boolean accept(Message message, PoTopicTest topic, ConsumeContext context) {
+  public boolean accept(Message message, PoTopicTest topic) {
     return true;
   }
 
   @Override
-  public Action consume(Message message, PoTopicTest topic, ConsumeContext context) {
+  public Action consume(Message message, PoTopicTest topic) {
     return Action.Commit;
   }
 }
