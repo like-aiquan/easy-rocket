@@ -18,12 +18,20 @@ public class ContinuousStopwatch {
 
   /**
    * Constructs a ContinuousStopwatch, which will start timing immediately after construction.
+   */
+  public ContinuousStopwatch() {
+    this.stopwatch = Stopwatch.createUnstarted();
+    this.reset();
+  }
+
+  /**
+   * Constructs a ContinuousStopwatch, which will start timing immediately after construction.
    *
    * @param stopwatch the internal stopwatch used by ContinuousStopwatch
    */
   public ContinuousStopwatch(Stopwatch stopwatch) {
     this.stopwatch = stopwatch;
-    reset();
+    this.reset();
   }
 
   /**
